@@ -1,14 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <ncurses.h>
+#include <string.h>
 
-//ask about arrow keys
-int main(){
-	char *str;
-    printf (" enter a string of any length, whitespace is OK: ");
-    while(!feof(stdin)){
-		scanf ("%ms", &str);
-    	printf ("\n str: %s\n\n", str);
-		free(str);	
-	}
-    return 0;
+//works but not the best way to get input
+char * old_input(){
+	char * str;
+	scanf("%ms", &str);
+	return str;
+}
+int main(){//main does not belong here, it is only used for bug testing
+	//printf("%s\n",old_input());
 }
