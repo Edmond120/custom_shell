@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+//ask about arrow keys
 int main(){
 	char *str;
     printf (" enter a string of any length, whitespace is OK: ");
