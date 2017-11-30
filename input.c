@@ -4,19 +4,10 @@
 int main(){
 	char *str;
     printf (" enter a string of any length, whitespace is OK: ");
-    while(1){
+    while(!feof(stdin)){
 		scanf ("%ms", &str);
     	printf ("\n str: %s\n\n", str);
-		printf("%c\n",str[0]);
-		
-		if(0){
-			printf("before break\n");
-			break;
-			printf("after break\n");
-		}
-		printf("before free\n");
-		free(str);
-		printf("after free\n");
+		free(str);	
 	}
     return 0;
 }
