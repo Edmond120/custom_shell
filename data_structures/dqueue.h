@@ -19,3 +19,9 @@ void push_input_dqueue(char * input, struct input_dqueue *);
 
 //prints the dqueue
 void print_input_dqueue(struct input_dqueue *);
+
+//prints the dqueue in its intended form (start as 0)
+void print_input_dqueue(struct input_dqueue *);
+
+//gets the value of index in the dqueue (start as 0)
+char * dqueue_get(int index, struct input_dqueue *);

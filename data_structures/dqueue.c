@@ -33,7 +33,7 @@ void free_input_dqueue_end(struct input_dqueue * in_dqueue){
 	}
 }
 
-void print_input_dqueue(struct input_dqueue * in_dqueue){
+void print_input_dqueue_array(struct input_dqueue * in_dqueue){
 	int i;
 	for(i = 0; i < in_dqueue->size; i++){
 		printf("%d: %s\n",i,in_dqueue->dqueue[i]);
@@ -41,8 +41,19 @@ void print_input_dqueue(struct input_dqueue * in_dqueue){
 	printf("start: %d, end: %d\n",in_dqueue->start,in_dqueue->end);
 }
 
+void print_input_dqueue(struct input_dqueue * in_dqueue){
+	int i;
+	for(i = 0; i < in_dqueue->size; i++){
+		printf("%d: %s\n",i,dqueue_get(i,in_dqueue));
+	}
+}
+
+char* dqueue_get(int index,struct input_dqueue * in_dqueue){
+	return in_dqueue->dqueue[(in_dqueue->end + (in_dqueue->size - index)) % in_dqueue->size];
+}
+
 //for testing purposes
-/*
+
 int main(){
 	struct input_dqueue * buffer = input_dqueue_init(5);
 	int i;
@@ -51,6 +62,8 @@ int main(){
 		scanf("%ms",&str);
 		push_input_dqueue(str,buffer);
 		print_input_dqueue(buffer);
+		printf("actual array\n");
+		print_input_dqueue_array(buffer);
 	} 
 }
-*/
+
