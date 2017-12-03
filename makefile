@@ -4,7 +4,7 @@ input.o:
 data_structures/dqueue.o:
 	gcc -c data_structures/dqueue.c
 
-clear:
+clean:
 	rm data_structures/*.o
 	rm *.o
 	rm *.out
