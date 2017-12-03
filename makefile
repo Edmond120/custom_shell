@@ -2,7 +2,7 @@ input.o:
 	gcc -c input.c -lncurses
 
 data_structures/dqueue.o:
-	gcc -c data_structures/dqueue.c
+	gcc -c data_structures/dqueue.c -o data_structures/dqueue.o
 
 clean:
 	rm data_structures/*.o
