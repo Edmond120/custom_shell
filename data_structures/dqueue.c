@@ -53,7 +53,7 @@ char* dqueue_get(int index,struct input_dqueue * in_dqueue){
 }
 
 //for testing purposes
-
+/*
 int main(){
 	struct input_dqueue * buffer = input_dqueue_init(5);
 	int i;
@@ -66,4 +66,4 @@ int main(){
 		print_input_dqueue_array(buffer);
 	} 
 }
-
+*/
