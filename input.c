@@ -4,12 +4,22 @@
 #include <string.h>
 #include "data_structures/dqueue.h"
 #include "input.h"
+#include <ctype.h>
+
+static void ncurses_init(){
+	initscr();
+	keypad(stdscr, TRUE);
+	noecho();
+	cbreak();
+	scrollok(stdscr, TRUE);
+}
 
 void input_init(int b_size, int h_size){
 	history = input_dqueue_init(h_size);
 	history_size = h_size;
 	new_buffer(b_size);
 	default_buffer_size = b_size;
+	ncurses_init();
 }
 
 void new_buffer(int b_size){
@@ -24,6 +34,7 @@ static void insert_char(char new_char){
 }
 
 //shifts everything starting from buffer_index to the right, expands buffer if needed
+
 static void buffer_shift_right(){
 	int i;
 	char temp = buffer[buffer_index];
@@ -42,7 +53,10 @@ static void buffer_shift_right(){
 
 //shifts everything starting from buffer_index to the left, overwritting the character in buffer_index
 static void buffer_shift_left(){
-
+	int i;
+	for(i = buffer_index; buffer[i];i++){
+		buffer[i] = buffer[i + 1];
+	}
 }
 
 void buffer_add(char new_char){
@@ -76,19 +90,23 @@ void buffer_add(char new_char){
 	}
 }
 
+int listen(){
+	return wlisten(stdscr);
+}
+
+int wlisten(WINDOW * win){
+	int c = wgetch(win);
+	if(isprint(c)){
+		key = c;
+		return 0;
+	}
+	else{
+		keycode = c;
+		return 1;
+	}
+}
+
 //for testing purposes
 int main(){
-	new_buffer(10);
-	int i;
-	for(i = 0; i < 5; i++){
-		buffer[i] = i + 97;
-	}
-	printf("%s\n",buffer);
-	for(i = 0; i < 5;i++){
-		printf("shift right\n");
-		buffer_shift_right();
-		printf("%s\n",buffer);
-	}
-	printf("buffer size: %d\n",buffer_size);
 	return 0;
 }
