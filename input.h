@@ -1,3 +1,4 @@
+#include<ncurses.h>
 struct input_dqueue * history;
 char * buffer;
 int buffer_size;
@@ -17,6 +18,10 @@ void buffer_add(char new_char);
 
 //creates a new buffer
 void new_buffer(int b_size);
+
+//copies a buffer and returns a pointer to the new buffer and sets buffer_size to the size of the new buffer
+//also sets  buffer_index to the end of the buffer
+char * buffer_cpy(char * buff);
 
 //default window is stdscr
 //listens for input and sets key (for char) and keycode (for arrow keys and stuff)

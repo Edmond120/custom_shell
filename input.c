@@ -14,6 +14,17 @@ static void ncurses_init(){
 	scrollok(stdscr, TRUE);
 }
 
+char * buffer_cpy(char * buff){
+	buffer_size = strlen(buff) + 1;
+	char * cpy = (char *)malloc(sizeof(char) * buffer_size);
+	int i;
+	for(i = 0; i < buffer_size; i++){
+		cpy[i] = buff[i];
+	}
+	buffer_index = buffer_size - 1;
+	return cpy;
+}
+
 void input_init(int b_size, int h_size){
 	history = input_dqueue_init(h_size);
 	history_size = h_size;
@@ -104,9 +115,4 @@ int wlisten(WINDOW * win){
 		keycode = c;
 		return 1;
 	}
-}
-
-//for testing purposes
-int main(){
-	return 0;
 }

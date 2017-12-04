@@ -18,7 +18,7 @@ void free_input_dqueue_end(struct input_dqueue *);
 void push_input_dqueue(char * input, struct input_dqueue *);
 
 //prints the dqueue
-void print_input_dqueue(struct input_dqueue *);
+void print_input_dqueue_array(struct input_dqueue *);
 
 //prints the dqueue in its intended form (start as 0)
 void print_input_dqueue(struct input_dqueue *);
