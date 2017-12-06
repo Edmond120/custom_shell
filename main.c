@@ -48,12 +48,15 @@ char * head;
 char * path;
 char * end;
 WINDOW * selected_win;
+int history_range;
 int history_index;
 
 void parse(){
 	new_buffer(default_buffer_size);
 	//gets input
 	wprintw(selected_win,"%s%s%s",head,path,end);
+	int prompt_start_y,prompt_start_x;
+	getyx(selected_win,prompt_start_y,prompt_start_x);
 	while(1){
 		if(listen()){
 			//non-printable character
@@ -75,10 +78,42 @@ void parse(){
 				}
 			}
 			else if(keycode == KEY_UP){
-				
+				if(history_index >= 0){
+					wmove(selected_win,prompt_start_y,prompt_start_x);
+					int i,s;
+					s = strlen(buffer);
+					for(i = 0; i < s; i++){
+						addch(' ');
+					}
+					wmove(selected_win,prompt_start_y,prompt_start_x);
+					free(buffer);
+					history_index -= 1;
+					if(history_index < 0){
+						history_index = history_range - 1;
+					}
+					buffer = buffer_cpy(dqueue_get(history_index,history));
+					wprintw(selected_win,"%s",buffer);
+					
+				}
 			}
 			else if(keycode == KEY_DOWN){
-				
+				if(history_index >= 0){
+					wmove(selected_win,prompt_start_y,prompt_start_x);
+					int i,s;
+					s = strlen(buffer);
+					for(i = 0; i < s; i++){
+						addch(' ');
+					}
+					wmove(selected_win,prompt_start_y,prompt_start_x);
+					free(buffer);
+					history_index += 1;
+					if(history_index >= history_range){
+						history_index = 0;
+					}
+					buffer = buffer_cpy(dqueue_get(history_index,history));
+					wprintw(selected_win,"%s",buffer);
+					
+				}
 			}
 			else if(keycode == KEY_BACKSPACE){
 				if(backspace()){
@@ -108,16 +143,17 @@ void parse(){
 	}
 	//puts input into history
 	push_input_dqueue(buffer, history);
-	//updates history_index
+	//updates history_range and histroy_index
 	if(history->dqueue[0] && history->dqueue[1]){
-		history_index = history_size - 1;
+		history_range = history_size;
 	}
 	else{
-		history_index++;
-		if(history_index >= history_size){
-			history_index = history_size - 1;
+		history_range++;
+		if(history_range >= history_size){
+			history_range = history_size;
 		}
 	}
+	history_index = history_range;
 	//makes a copy of the input and parses it
 	
 	//writes to variables
@@ -137,7 +173,8 @@ int display_output(){
 int main(){
 	input_init(20,10);
 	selected_win = stdscr;
-	history_index = 0;
+	history_index = -1;
+	history_range = 0;
 	head = "TERM:";
 	//remember to actually set path
 	path = "";
