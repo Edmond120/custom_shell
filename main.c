@@ -51,7 +51,7 @@ WINDOW * selected_win;
 int history_range;
 int history_index;
 
-void parse(){
+void get_input(){
 	new_buffer(default_buffer_size);
 	//gets input
 	wprintw(selected_win,"%s%s%s",head,path,end);
@@ -158,6 +158,25 @@ void parse(){
 	
 	//writes to variables
 }
+struct parsed_input{
+	int commands_size;
+	char ** commands;
+	int * symbols;
+}
+struct parsed_input * parse(char * str){
+	struct parsed_input * output =(struct parsed_input *)malloc(sizeof(struct parsed_input));
+	int i;
+	output->commands_size = 1;
+	for(i = 0; str[i]; i++){
+		if(str[i] == ';' || str[i] == '>' || str[i] == '<'){
+			output->commands_size += 1;
+		}
+	}
+	output->commands = (char**)malloc(sizeof(char *) * output->commands_size);
+	for(i = 0; str[i]; i++){
+		
+	}
+}
 
 int execute(){ 
 //return 0 if child finished
@@ -181,18 +200,32 @@ int main(){
 	end = "$ ";
 	while(1){
 		//gets input and handles basic terminal interfacing
-		parse();	
-		//forks and executes the process
-		int end = execute();	
-		if(end == 0){
-			return 0;
+		get_input();
+		char * str = buffer_cpy(buffer);
+		//parses the string
+		int i;
+		struct parsed_input * parsed = parse(str);
+		free(buffer);
+		for(i = 0; i < parsed->commands_size; i++){
+			//forks and executes the process
+			int end = execute();	
+			if(end == 0){
+				return 0;
+			}
+			else if(end == 1){
+				endwin();
+				return 0;
+			}
+			else if(end == 2){
+				display_output();
+			}
 		}
-		else if(end == 1){
-			break;
+		for(i = 0; i < parsed->commands_size; i++){
+			free(parsed->commands[i]);
 		}
-		else if(end == 2){
-			display_output();
-		}
+		free(parsed->commands);
+		free(parsed->symbols);
+		free(parsed);
 	}
 	endwin();
 	return 0;
