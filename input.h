@@ -30,3 +30,7 @@ int listen();
 
 //like listen but lets you choose which ncurses window to listen to
 int wlisten(WINDOW *);
+
+//removes the character before buffer_index and sets buffer_index back by 1, does not set it below 0
+//returns 1 if buffer_index decreases and returns 0 if nothing happens
+int backspace();

@@ -7,7 +7,7 @@ struct input_dqueue * input_dqueue_init(int n){
 	in_dqueue->size = n;
 	in_dqueue->start = 0;
 	in_dqueue->end = 0;
-	in_dqueue->dqueue = (char **)malloc(sizeof(char *) * n);
+	in_dqueue->dqueue = (char **)calloc(n,sizeof(char *));
 	in_dqueue->dqueue[0] = (char *)NULL;
 	return in_dqueue;
 }

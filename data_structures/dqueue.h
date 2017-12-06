@@ -8,9 +8,6 @@ struct input_dqueue{ //the input_dqueue's job is to store a history of inputs
 //creates and inits an input_dqueue with size n and returns a pointer to it
 struct input_dqueue * input_dqueue_init(int n);
 
-//frees the dequeue
-void free_input_dqueue(struct input_dqueue *);
-
 //frees the end of the dequeue
 void free_input_dqueue_end(struct input_dqueue *);
 

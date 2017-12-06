@@ -70,6 +70,17 @@ static void buffer_shift_left(){
 	}
 }
 
+int backspace(){
+	if(buffer_index > 0){
+		buffer_index--;
+		buffer_shift_left();
+		return 1;
+	}
+	else{
+		return 0;
+	}
+}
+
 void buffer_add(char new_char){
 	if(buffer[buffer_index]){
 		buffer_shift_right();

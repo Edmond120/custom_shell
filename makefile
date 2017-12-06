@@ -4,11 +4,11 @@ term: input.o data_structures/dqueue.o
 run: term
 	./term
 
-input.o:
-	gcc -c input.c -lncurses
-
 data_structures/dqueue.o:
 	gcc -c data_structures/dqueue.c -o data_structures/dqueue.o
+
+input.o:
+	gcc -c input.c -lncurses
 
 clean:
 	rm data_structures/*.o
