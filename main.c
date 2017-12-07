@@ -161,24 +161,42 @@ void get_input(){
 struct parsed_input{
 	int commands_size;
 	char ** commands;
-	int * symbols;
-}
+	char * symbols;
+	int * place;
+};
 struct parsed_input * parse(char * str){
 	struct parsed_input * output =(struct parsed_input *)malloc(sizeof(struct parsed_input));
 	int i;
-	output->commands_size = 1;
+	output->commands_size = 0;
+	output->commands = (char **)malloc(sizeof(char *));
+	output->commands[output->commands_size++] = str;
 	for(i = 0; str[i]; i++){
-		if(str[i] == ';' || str[i] == '>' || str[i] == '<'){
-			output->commands_size += 1;
+		if(str[i] == ';'){
+			if(str[i+1]){
+				output->commands_size += 1;
+				output->commands = (char **)realloc(output->commands,sizeof(char *) * output->commands_size);
+				output->commands[output->commands_size] = &str[i + 1];
+			}
+			str[i] = '\0';
 		}
 	}
-	output->commands = (char**)malloc(sizeof(char *) * output->commands_size);
-	for(i = 0; str[i]; i++){
-		
+	output->symbols = (char *)calloc(sizeof(char),output->commands_size);
+	output->place = (int *)calloc(sizeof(int),output->commands_size);
+	for(i = 0; i < output->commands_size; i++){
+		int ii;
+		int len = strlen(output->commands[i]);
+		for(ii = 0; ii < len; ii++){
+			if(output->commands[i][ii] == '>' || output->commands[i][ii] == '<' || output->commands[i][ii] == '|'){
+				output->symbols[i] = output->commands[i][ii];
+				output->place[i] = ii;
+			}
+		}
 	}
+	output->symbols[i] = '\0';
+	return output;
 }
 
-int execute(){ 
+int execute(int index, struct parsed_input * parsed){ 
 //return 0 if child finished
 // 1 if exit has been called
 // 2 if its the parent process
@@ -208,7 +226,7 @@ int main(){
 		free(buffer);
 		for(i = 0; i < parsed->commands_size; i++){
 			//forks and executes the process
-			int end = execute();	
+			int end = execute(i,parsed);	
 			if(end == 0){
 				return 0;
 			}
@@ -225,6 +243,7 @@ int main(){
 		}
 		free(parsed->commands);
 		free(parsed->symbols);
+		free(parsed->place);
 		free(parsed);
 	}
 	endwin();
