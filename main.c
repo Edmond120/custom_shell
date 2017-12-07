@@ -50,6 +50,8 @@ char * end;
 WINDOW * selected_win;
 int history_range;
 int history_index;
+int stdout_pipe[2];//0 is read, 1 is write
+int stderr_pipe[2];
 
 void get_input(){
 	new_buffer(default_buffer_size);
@@ -200,6 +202,56 @@ int execute(int index, struct parsed_input * parsed){
 //return 0 if child finished
 // 1 if exit has been called
 // 2 if its the parent process
+// 3 to skip
+	char * command_start = parsed->commands[index];
+	int i = 0;
+	while(parsed->commands[index][i] == ' ' || parsed->commands[index][i] == '\0'){
+		if(parsed->commands[index][i]){
+			i++;
+		}
+		else{
+			return 3;
+		}
+	}
+	command_start = parsed->commands[index] + i;
+	for(i = strlen(command_start) - 1; i >= 0; i--){
+		if(command_start[i] == ' '){
+			command_start[i] == '\0';
+		}
+		else{
+			break;
+		}
+	}
+	pipe(stdout_pipe);
+	pipe(stderr_pipe);
+	int f = fork();
+	if(f){//parent
+		close(stdout_pipe[1]);
+		close(stderr_pipe[1]);
+	}
+	else{//child
+		close(stdout_pipe[0]);
+		close(stderr_pipe[0]);
+		int i;
+		int sections = 1;
+		for(i = 0; parsed->commands[index][i];i++){
+			if(parsed->commands[index][i] == ' '){
+				sections++;
+			}
+		}
+		char* args[sections];
+		int ii = 1;
+		args[0] = parsed->commands[index];
+		for(i = 0; parsed->commands[index][i];i++){
+			if(parsed->commands[index][i] == ' '){
+				parsed->commands[index][i] == '\0';
+				args[ii] = &parsed->commands[index][i+1];
+			}
+		}
+		dup2(1,stdout_pipe[1]);
+		dup2(2,stderr_pipe[1]);
+		execvp(args[0],args);
+	}
 	return 2;
 }
 
