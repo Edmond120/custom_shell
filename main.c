@@ -175,7 +175,7 @@ struct parsed_input * parse(char * str){
 			if(str[i+1]){
 				output->commands_size += 1;
 				output->commands = (char **)realloc(output->commands,sizeof(char *) * output->commands_size);
-				output->commands[output->commands_size] = &str[i + 1];
+				output->commands[output->commands_size - 1] = &str[i + 1];
 			}
 			str[i] = '\0';
 		}
@@ -223,7 +223,6 @@ int main(){
 		//parses the string
 		int i;
 		struct parsed_input * parsed = parse(str);
-		free(buffer);
 		for(i = 0; i < parsed->commands_size; i++){
 			//forks and executes the process
 			int end = execute(i,parsed);	
@@ -241,6 +240,7 @@ int main(){
 		for(i = 0; i < parsed->commands_size; i++){
 			free(parsed->commands[i]);
 		}
+		free(buffer);
 		free(parsed->commands);
 		free(parsed->symbols);
 		free(parsed->place);
