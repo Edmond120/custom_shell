@@ -248,8 +248,8 @@ int execute(int index, struct parsed_input * parsed){
 				args[ii] = &parsed->commands[index][i+1];
 			}
 		}
-		dup2(1,stdout_pipe[1]);
-		dup2(2,stderr_pipe[1]);
+		dup2(stdout_pipe[1],1);
+		dup2(stderr_pipe[1],2);
 		execvp(args[0],args);
 	}
 	return 2;
